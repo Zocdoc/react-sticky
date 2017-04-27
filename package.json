@@ -24,7 +24,7 @@
   "license": "MIT",
   "homepage": "https://github.com/captivationsoftware/react-sticky",
   "dependencies": {
-    "prop-types": "15.5.8"
+    "prop-types": "^15.5.8"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",
