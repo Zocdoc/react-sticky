@@ -8,7 +8,7 @@
     "compile": "babel src --loose --out-dir lib",
     "start": "webpack --watch",
     "prepublish": "npm run clean && npm run compile",
-    "test": "mocha --compilers js:babel-core/register test/unit",
+    "test": "",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
