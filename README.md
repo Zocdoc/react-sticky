@@ -1,3 +1,6 @@
+# THIS IS A LEGACY VERSION OF REACT STICKY. DO NOT UPDATE UNLESS TO FIX A REACT PROBLEM.
+
+
 react-sticky [![Build Status](https://travis-ci.org/captivationsoftware/react-sticky.svg?branch=master)](https://travis-ci.org/captivationsoftware/react-sticky)
 ============
 The most powerful Sticky library available for React!
@@ -63,7 +66,7 @@ Note that the calculation of the Sticky element's height does not currently take
 
 ### `<StickyContainer />` Props
 
-`<StickyContainer />` passes along all props you provide to it without interference. That's right - no restrictions - go nuts!  
+`<StickyContainer />` passes along all props you provide to it without interference. That's right - no restrictions - go nuts!
 
 ### `<Sticky />` Props
 

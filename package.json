@@ -1,5 +1,5 @@
 {
-  "name": "react-sticky",
+  "name": "@zocdoc/react-sticky-5",
   "version": "5.0.8",
   "description": "Sticky component for React",
   "main": "lib/index.js",
