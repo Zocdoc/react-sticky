@@ -4,11 +4,8 @@
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "scripts": {
-    "clean": "rimraf lib dist",
-    "transpile": "babel src --loose --out-dir lib",
-    "dist": "webpack lib/index.js dist/react-sticky.js --display-modules --progress && NODE_ENV=production webpack lib/index.js dist/react-sticky.min.js --display-modules --progress",
-    "build": "npm run transpile && npm run dist",
-    "prepublish": "npm run clean && npm run build",
+    "transpile": "babel src --out-dir lib",
+    "prepublish": "npm run transpile",
     "test": "mocha --compilers js:babel-core/register test/unit"
   },
   "repository": {
@@ -26,12 +23,10 @@
     "url": "https://github.com/captivationsoftware/react-sticky/issues"
   },
   "homepage": "https://github.com/captivationsoftware/react-sticky",
-  "dependencies": {
-    "prop-types": "^15.5.8"
-  },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0"
+    "prop-types": "^15.5.8",
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.6.0",
@@ -44,9 +39,10 @@
     "chai": "^3.2.0",
     "jsdom": "8.0.4",
     "mocha": "^2.2.5",
-    "react": "^0.14.0 || ^15.0.0",
-    "react-addons-test-utils": "^0.14.0 || ^15.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0",
+    "prop-types": "^15.5.8",
+    "react": "^15.0.0",
+    "react-addons-test-utils": "^15.0.0",
+    "react-dom": "^15.0.0",
     "rimraf": "^2.5.2",
     "webpack": "^1.12.14"
   }
