@@ -239,7 +239,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.default = Channel;
-	module.exports = exports['default'];
 
 /***/ }),
 /* 5 */
@@ -467,7 +466,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  'sticky-channel': _propTypes2.default.any
 	};
 	exports.default = Container;
-	module.exports = exports['default'];
 
 /***/ }),
 /* 10 */
@@ -740,7 +738,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  'sticky-channel': _propTypes2.default.any
 	};
 	exports.default = Sticky;
-	module.exports = exports['default'];
 
 /***/ }),
 /* 11 */
