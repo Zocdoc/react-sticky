@@ -8,11 +8,11 @@ export default class Container extends React.Component {
 
   static contextTypes = {
     'sticky-channel': PropTypes.any,
-  }
+  };
 
   static childContextTypes = {
     'sticky-channel': PropTypes.any,
-  }
+  };
 
   constructor(props) {
     super(props);

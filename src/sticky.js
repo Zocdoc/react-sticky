@@ -13,7 +13,7 @@ export default class Sticky extends React.Component {
     topOffset: PropTypes.number,
     bottomOffset: PropTypes.number,
     onStickyStateChange: PropTypes.func
-  }
+  };
 
   static defaultProps = {
     isActive: true,
@@ -24,11 +24,11 @@ export default class Sticky extends React.Component {
     topOffset: 0,
     bottomOffset: 0,
     onStickyStateChange: () => {}
-  }
+  };
 
   static contextTypes = {
     'sticky-channel': PropTypes.any
-  }
+  };
 
   constructor(props) {
     super(props);
