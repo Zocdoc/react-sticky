@@ -31,17 +31,31 @@ export default class Sticky extends React.Component {
     'sticky-channel': PropTypes.any
   };
 
+  $children = null;
+  $placeholder = null;
+
+  childMetrics = null;
+  placeholderMetrics = null;
+
+  containerOffset = undefined;
+  distanceFromBottom = null;
+  height = null;
+  width = null;
+  xOffset = null;
+
   propKeys = null;
   state = {};
 
   componentDidMount() {
-    this.channel = this.context['sticky-channel'];
-    this.channel.subscribe(this.updateContext);
+    this.$children = this.refs.children;
+    this.$placeholder = this.refs.placeholder;
+    this.propKeys = Object.keys(this.props);
 
     this.on(monitoredEventNames, this.recomputeState);
     this.recomputeState();
 
-    this.propKeys = Object.keys(this.props);
+    this.channel = this.context['sticky-channel'];
+    this.channel.subscribe(this.updateContext);
   }
 
   componentWillReceiveProps() {
@@ -57,17 +71,7 @@ export default class Sticky extends React.Component {
     if (valuesChanged) return true;
 
     // Have we changed any state that will always impact rendering?
-    const state = this.state;
-    if (newState.isSticky !== state.isSticky) return true;
-
-    // If we are sticky, have we changed any state that will impact rendering?
-    if (state.isSticky) {
-      if (newState.height !== state.height) return true;
-      if (newState.width !== state.width) return true;
-      if (newState.xOffset !== state.xOffset) return true;
-      if (newState.containerOffset !== state.containerOffset) return true;
-      if (newState.distanceFromBottom !== state.distanceFromBottom) return true;
-    }
+    if (newState.isSticky !== this.state.isSticky) return true;
 
     return false;
   }
@@ -79,40 +83,13 @@ export default class Sticky extends React.Component {
   componentWillUnmount() {
     this.off(monitoredEventNames, this.recomputeState);
     this.channel.unsubscribe(this.updateContext);
+
+    this.$children = null;
+    this.$containerNode = null;
+    this.$placeholder = null;
   }
 
-  /*
-   * The special sauce.
-   */
   render() {
-    const placeholderStyle = { paddingBottom: 0 };
-    let className = this.props.className;
-
-    // To ensure that this component becomes sticky immediately on mobile devices instead
-    // of disappearing until the scroll event completes, we add `transform: translateZ(0)`
-    // to 'kick' rendering of this element to the GPU
-    // @see http://stackoverflow.com/questions/32875046
-    let style = { transform: 'translateZ(0)', ...this.props.style };
-
-    if (this.state.isSticky) {
-      const stickyStyle = {
-        position: 'fixed',
-        top: this.state.containerOffset,
-        left: this.state.xOffset,
-        width: this.state.width
-      };
-
-      const bottomLimit = this.state.distanceFromBottom - this.state.height - this.props.bottomOffset;
-      if (this.state.containerOffset > bottomLimit) {
-        stickyStyle.top = bottomLimit;
-      }
-
-      placeholderStyle.paddingBottom = this.state.height;
-
-      className += ` ${this.props.stickyClassName}`;
-      style = {...style, ...stickyStyle, ...this.props.stickyStyle};
-    }
-
     const {
       topOffset,
       isActive,
@@ -125,73 +102,96 @@ export default class Sticky extends React.Component {
 
     return (
       <div>
-        <div ref="placeholder" style={placeholderStyle}></div>
-        <div {...props} ref="children" className={className} style={style}>
+        <div ref="placeholder" />
+        <div {...props} ref="children">
           {this.props.children}
         </div>
       </div>
     );
   }
 
-  getXOffset() {
-    return this.refs.placeholder.getBoundingClientRect().left;
-  }
+  captureMetrics() {
+    this.childMetrics = this.$children.getBoundingClientRect();
+    this.placeholderMetrics = this.$placeholder.getBoundingClientRect();
 
-  getWidth() {
-    return this.refs.placeholder.getBoundingClientRect().width;
-  }
-
-  getHeight() {
-    return ReactDOM.findDOMNode(this.refs.children).getBoundingClientRect().height;
-  }
-
-  getDistanceFromTop() {
-    return this.refs.placeholder.getBoundingClientRect().top;
-  }
-
-  getDistanceFromBottom() {
-    if (!this.containerNode) return 0;
-    return this.containerNode.getBoundingClientRect().bottom;
+    this.height = this.childMetrics.height;
+    this.width = this.placeholderMetrics.width;
+    this.xOffset = this.placeholderMetrics.left;
+    this.distanceFromTop = this.placeholderMetrics.top;
   }
 
   isSticky() {
     if (!this.props.isActive) return false;
 
-    const fromTop = this.getDistanceFromTop();
-    const fromBottom = this.getDistanceFromBottom();
+    const topBreakpoint = this.containerOffset - this.props.topOffset;
+    const bottomBreakpoint = this.containerOffset + this.props.bottomOffset;
 
-    const topBreakpoint = this.state.containerOffset - this.props.topOffset;
-    const bottomBreakpoint = this.state.containerOffset + this.props.bottomOffset;
+    return this.distanceFromTo <= topBreakpoint && this.distanceFromBottom >= bottomBreakpoint;
+  }
 
-    return fromTop <= topBreakpoint && fromBottom >= bottomBreakpoint;
+  handleUpdateDOM() {
+    const placeholderStyle = { paddingBottom: 0 };
+
+    // To ensure that this component becomes sticky immediately on mobile devices instead
+    // of disappearing until the scroll event completes, we add `transform: translateZ(0)`
+    // to 'kick' rendering of this element to the GPU
+    // @see http://stackoverflow.com/questions/32875046
+    let style = { transform: 'translateZ(0)', ...this.props.style };
+
+    if (this.state.isSticky) {
+      const stickyStyle = {
+        position: 'fixed',
+        top: this.containerOffset,
+        left: this.xOffset,
+        width: this.width
+      };
+
+      const bottomLimit = this.distanceFromBottom - this.height - this.props.bottomOffset;
+      if (this.containerOffset > bottomLimit) {
+        stickyStyle.top = bottomLimit;
+      }
+
+      placeholderStyle.paddingBottom = this.height;
+
+      style = Object.assign({}, style, stickyStyle, this.props.stickyStyle);
+    }
+
+    this.$children.classList[this.state.isSticky ? 'add' : 'remove'](this.props.stickyClassName);
+    Object.assign(this.$children.style, style);
+
+    Object.assign(this.$placeholder.style, placeholderStyle);
   }
 
   updateContext = ({ inherited, node }) => {
-    this.containerNode = node;
-    this.setState({
-      containerOffset: inherited,
-      distanceFromBottom: this.getDistanceFromBottom()
-    });
+    if (!this.$containerNode) {
+      this.$containerNode = node;
+    }
+
+    if (inherited !== this.containerOffset) {
+      this.containerOffset = inherited;
+      this.distanceFromBottom = this.$containerNode.getBoundingClientRect().bottom;
+
+      this.recomputeState();
+    }
   };
 
   recomputeState = () => {
+    this.captureMetrics();
+
     const isSticky = this.isSticky();
-    const height = this.getHeight();
-    const width = this.getWidth();
-    const xOffset = this.getXOffset();
-    const distanceFromBottom = this.getDistanceFromBottom();
-    const hasChanged = this.state.isSticky !== isSticky;
 
-    this.setState({ isSticky, height, width, xOffset, distanceFromBottom });
+    if (this.state.isSticky !== isSticky) {
+      this.setState({ isSticky }, this.handleUpdateDOM);
 
-    if (hasChanged) {
       if (this.channel) {
         this.channel.update((data) => {
-          data.offset = (isSticky ? height : 0);
+          data.offset = (isSticky ? this.height : 0);
         });
       }
 
       this.props.onStickyStateChange(isSticky);
+    } else {
+      this.handleUpdateDOM();
     }
   };
 

@@ -2,9 +2,9 @@
   "name": "react-sticky-5",
   "version": "5.0.8",
   "description": "Sticky component for React",
-  "main": "lib/index.js",
+  "module": "lib/index.js",
   "scripts": {
-    "transpile": "babel src --out-dir lib",
+    "transpile": "babel src --out-dir lib --source-maps",
     "prepublish": "npm run transpile"
   },
   "repository": {
