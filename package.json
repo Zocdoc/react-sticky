@@ -1,8 +1,9 @@
 {
-  "name": "react-sticky-5",
-  "version": "5.0.8",
+  "name": "@zocdoc/react-sticky-5",
+  "version": "1.0.0",
   "description": "Sticky component for React",
   "main": "lib/index.js",
+  "module": "src/index.js",
   "scripts": {
     "transpile": "babel src --out-dir lib",
     "prepublish": "npm run transpile"
@@ -23,17 +24,13 @@
   },
   "homepage": "https://github.com/captivationsoftware/react-sticky",
   "peerDependencies": {
-    "prop-types": "^15.5.8",
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "prop-types": ">= 15",
+    "react": ">= 15",
+    "react-dom": ">= 15"
   },
   "devDependencies": {
+    "@zocdoc/babel-preset-zocdoc": "^5.1.2",
     "babel-cli": "^6.6.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-assign": "^6.5.0",
-    "babel-preset-es2015": "^6.5.0",
-    "babel-preset-react": "^6.5.0",
-    "babel-preset-stage-0": "^6.5.0",
     "prop-types": "^15.5.8",
     "react": "^15.0.0",
     "react-addons-test-utils": "^15.0.0",
