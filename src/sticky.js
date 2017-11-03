@@ -107,7 +107,7 @@ export default class Sticky extends React.Component {
         stickyStyle.top = bottomLimit;
       }
 
-      placeholderStyle.paddingBottom = this.state.height;
+      placeholderStyle.paddingBottom = this.state.height + this.props.topOffset;
 
       className += ` ${this.props.stickyClassName}`;
       style = {...style, ...stickyStyle, ...this.props.stickyStyle};
