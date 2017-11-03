@@ -92,7 +92,7 @@ export default class Sticky extends React.Component {
     // of disappearing until the scroll event completes, we add `transform: translateZ(0)`
     // to 'kick' rendering of this element to the GPU
     // @see http://stackoverflow.com/questions/32875046
-    let style = { transform: 'translateZ(0)', ...this.props.style };
+    let style = { transform: this.props.isActive ? 'translateZ(0)' : '', ...this.props.style };
 
     if (this.state.isSticky) {
       const stickyStyle = {
@@ -107,7 +107,7 @@ export default class Sticky extends React.Component {
         stickyStyle.top = bottomLimit;
       }
 
-      placeholderStyle.paddingBottom = this.state.height + this.props.topOffset;
+      placeholderStyle.paddingBottom = this.state.height;
 
       className += ` ${this.props.stickyClassName}`;
       style = {...style, ...stickyStyle, ...this.props.stickyStyle};
