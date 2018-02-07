@@ -4,6 +4,10 @@
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
     "transpile": "babel src --out-dir lib",
     "prepublish": "npm run transpile"
